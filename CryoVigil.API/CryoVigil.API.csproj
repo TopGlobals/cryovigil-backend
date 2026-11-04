@@ -19,6 +19,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.14"/>
         <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.12"/>
         <PackageReference Include="Humanizer" Version="3.0.10"/>
+        <PackageReference Include="Cortex.Mediator" Version="3.1.2"/>
     </ItemGroup>
 
 </Project>

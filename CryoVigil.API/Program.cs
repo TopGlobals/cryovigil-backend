@@ -10,6 +10,12 @@ using CryoVigil.API.Shared.Infrastructure.Pipeline.Middleware.Components;
 using CryoVigil.API.Shared.Interfaces.Rest.ProblemDetails;
 using CryoVigil.API.Shared.Resources;
 using CryoVigil.API.Shared.Resources.Errors;
+using CryoVigil.API.Settings.Application.CommandServices;
+using CryoVigil.API.Settings.Application.Internal.CommandServices;
+using CryoVigil.API.Settings.Application.Internal.QueryServices;
+using CryoVigil.API.Settings.Application.QueryServices;
+using CryoVigil.API.Settings.Domain.Repositories;
+using CryoVigil.API.Settings.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Scalar.AspNetCore;
@@ -62,6 +68,9 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<DispatchDomainEventsInterceptor>();
+builder.Services.AddScoped<IGeneralSettingsRepository, GeneralSettingsRepository>();
+builder.Services.AddScoped<IGeneralSettingsQueryService, GeneralSettingsQueryService>();
+builder.Services.AddScoped<IGeneralSettingsCommandService, GeneralSettingsCommandService>();
 
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(ExceptionHandlingCommandBehavior<>));

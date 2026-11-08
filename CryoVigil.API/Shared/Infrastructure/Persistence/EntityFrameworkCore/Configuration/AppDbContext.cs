@@ -1,5 +1,6 @@
 using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Interceptors;
+using CryoVigil.API.Settings.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
@@ -16,5 +17,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     {
         base.OnModelCreating(builder);
         builder.UseSnakeCaseNamingConvention();
+        builder.ApplySettingsConfiguration();
     }
 }

@@ -23,4 +23,12 @@
         <PackageReference Include="Cortex.Mediator" Version="3.1.2"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Settings\Application\" />
+      <Folder Include="Settings\Domain\" />
+      <Folder Include="Settings\Infrastructure\Persistence\EntityFrameworkCore\" />
+      <Folder Include="Settings\Interfaces\" />
+      <Folder Include="Settings\Resources\" />
+    </ItemGroup>
+
 </Project>

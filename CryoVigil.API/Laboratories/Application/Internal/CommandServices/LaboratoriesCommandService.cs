@@ -63,4 +63,23 @@ public class LaboratoriesCommandService(
 
         return Result<Laboratory>.Success(laboratory);
     }
+
+    public async Task<Result> Handle(
+        DeleteLaboratoryCommand command,
+        CancellationToken cancellationToken)
+    {
+        var laboratory = await laboratoryRepository.FindByIdAsync(command.Id, cancellationToken);
+        if (laboratory is null)
+        {
+            return Result.Failure(
+                Error.NotFound(
+                    "Laboratories.NotFound",
+                    $"Laboratory with ID '{command.Id}' was not found."));
+        }
+
+        laboratoryRepository.Remove(laboratory);
+        await unitOfWork.CompleteAsync(cancellationToken);
+
+        return Result.Success();
+    }
 }

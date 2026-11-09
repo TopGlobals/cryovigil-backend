@@ -30,7 +30,7 @@ public class LaboratoriesController(
 
         if (result.IsFailure)
         {
-            return HandleCommandFailure(result.DomainError);
+            return new ActionResult<LaboratoryResource>(HandleCommandFailure(result.DomainError));
         }
 
         var createdResource = LaboratoryResourceFromEntityAssembler.ToResource(result.Value!);
@@ -52,9 +52,24 @@ public class LaboratoriesController(
             cancellationToken);
 
         if (result.IsFailure)
-            return HandleCommandFailure(result.DomainError);
+            return new ActionResult<LaboratoryResource>(HandleCommandFailure(result.DomainError));
 
         return Ok(LaboratoryResourceFromEntityAssembler.ToResource(result.Value!));
+    }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Delete(int id, CancellationToken cancellationToken)
+    {
+        var result = await laboratoriesCommandService.Handle(
+            new DeleteLaboratoryCommand(id),
+            cancellationToken);
+
+        if (result.IsFailure)
+            return HandleCommandFailure(result.DomainError);
+
+        return NoContent();
     }
 
     [HttpGet]
@@ -103,7 +118,7 @@ public class LaboratoriesController(
             resource.Notifications);
     }
 
-    private ActionResult<LaboratoryResource> HandleCommandFailure(Error error)
+    private ObjectResult HandleCommandFailure(Error error)
     {
         var statusCode = error.Type switch
         {

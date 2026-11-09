@@ -9,4 +9,6 @@ public interface ILaboratoriesCommandService
     Task<Result<Laboratory>> Handle(CreateLaboratoryCommand command, CancellationToken cancellationToken);
 
     Task<Result<Laboratory>> Handle(UpdateLaboratoryCommand command, CancellationToken cancellationToken);
+
+    Task<Result> Handle(DeleteLaboratoryCommand command, CancellationToken cancellationToken);
 }

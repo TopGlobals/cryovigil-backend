@@ -1,6 +1,7 @@
 namespace CryoVigil.API.Alerts.Domain.Model.ValueObjects;
 
-public record AlertSeverity
+public enum AlertSeverity
 {
-    
+    Warning,
+    Critical
 }

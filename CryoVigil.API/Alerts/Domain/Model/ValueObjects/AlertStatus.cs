@@ -1,3 +1,8 @@
 namespace CryoVigil.API.Alerts.Domain.Model.ValueObjects;
 
-public record AlertStatus();
+public enum AlertStatus
+{
+    Active,
+    Acknowledged,
+    Resolved
+}

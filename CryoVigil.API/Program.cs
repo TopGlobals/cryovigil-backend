@@ -1,5 +1,9 @@
 using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
+using CryoVigil.API.Laboratories.Application.Internal.QueryServices;
+using CryoVigil.API.Laboratories.Application.QueryServices;
+using CryoVigil.API.Laboratories.Domain.Repositories;
+using CryoVigil.API.Laboratories.Infrastructure.Persistence.Efc.Repositories;
 using CryoVigil.API.Shared.Domain.Repositories;
 using CryoVigil.API.Shared.Infrastructure.Interfaces.AspNetCore.Configuration;
 using CryoVigil.API.Shared.Infrastructure.Mediator.Cortex.Configuration;
@@ -71,6 +75,8 @@ builder.Services.AddScoped<DispatchDomainEventsInterceptor>();
 builder.Services.AddScoped<IGeneralSettingsRepository, GeneralSettingsRepository>();
 builder.Services.AddScoped<IGeneralSettingsQueryService, GeneralSettingsQueryService>();
 builder.Services.AddScoped<IGeneralSettingsCommandService, GeneralSettingsCommandService>();
+builder.Services.AddScoped<ILaboratoryRepository, LaboratoryRepository>();
+builder.Services.AddScoped<ILaboratoriesQueryService, LaboratoriesQueryService>();
 
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(ExceptionHandlingCommandBehavior<>));

@@ -1,5 +1,7 @@
 using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
+using CryoVigil.API.Laboratories.Application.CommandServices;
+using CryoVigil.API.Laboratories.Application.Internal.CommandServices;
 using CryoVigil.API.Laboratories.Application.Internal.QueryServices;
 using CryoVigil.API.Laboratories.Application.QueryServices;
 using CryoVigil.API.Laboratories.Domain.Repositories;
@@ -77,6 +79,7 @@ builder.Services.AddScoped<IGeneralSettingsQueryService, GeneralSettingsQuerySer
 builder.Services.AddScoped<IGeneralSettingsCommandService, GeneralSettingsCommandService>();
 builder.Services.AddScoped<ILaboratoryRepository, LaboratoryRepository>();
 builder.Services.AddScoped<ILaboratoriesQueryService, LaboratoriesQueryService>();
+builder.Services.AddScoped<ILaboratoriesCommandService, LaboratoriesCommandService>();
 
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(ExceptionHandlingCommandBehavior<>));

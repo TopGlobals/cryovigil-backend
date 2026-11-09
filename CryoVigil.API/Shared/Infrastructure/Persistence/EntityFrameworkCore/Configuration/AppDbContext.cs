@@ -1,3 +1,4 @@
+using CryoVigil.API.Alerts.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Interceptors;
 using CryoVigil.API.Settings.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
@@ -16,7 +17,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.UseSnakeCaseNamingConvention();
         builder.ApplySettingsConfiguration();
+        builder.ApplyAlertsConfiguration();
+        builder.UseSnakeCaseNamingConvention();
     }
 }

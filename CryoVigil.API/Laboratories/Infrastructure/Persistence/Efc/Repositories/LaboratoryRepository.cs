@@ -9,9 +9,15 @@ namespace CryoVigil.API.Laboratories.Infrastructure.Persistence.Efc.Repositories
 public class LaboratoryRepository(AppDbContext context)
     : BaseRepository<Laboratory>(context), ILaboratoryRepository
 {
-    public async Task<bool> ExistsByCodeAsync(string code, CancellationToken cancellationToken = default)
+    public async Task<bool> ExistsByCodeAsync(
+        string code,
+        int? excludingLaboratoryId = null,
+        CancellationToken cancellationToken = default)
     {
         return await Context.Set<Laboratory>()
-            .AnyAsync(laboratory => laboratory.Code == code, cancellationToken);
+            .AnyAsync(
+                laboratory => laboratory.Code == code &&
+                              (!excludingLaboratoryId.HasValue || laboratory.Id != excludingLaboratoryId.Value),
+                cancellationToken);
     }
 }

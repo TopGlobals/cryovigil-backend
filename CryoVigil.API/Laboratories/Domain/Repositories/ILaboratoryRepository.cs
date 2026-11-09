@@ -5,5 +5,8 @@ namespace CryoVigil.API.Laboratories.Domain.Repositories;
 
 public interface ILaboratoryRepository : IBaseRepository<Laboratory>
 {
-    Task<bool> ExistsByCodeAsync(string code, CancellationToken cancellationToken = default);
+    Task<bool> ExistsByCodeAsync(
+        string code,
+        int? excludingLaboratoryId = null,
+        CancellationToken cancellationToken = default);
 }

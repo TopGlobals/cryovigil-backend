@@ -7,4 +7,6 @@ namespace CryoVigil.API.Laboratories.Application.CommandServices;
 public interface ILaboratoriesCommandService
 {
     Task<Result<Laboratory>> Handle(CreateLaboratoryCommand command, CancellationToken cancellationToken);
+
+    Task<Result<Laboratory>> Handle(UpdateLaboratoryCommand command, CancellationToken cancellationToken);
 }

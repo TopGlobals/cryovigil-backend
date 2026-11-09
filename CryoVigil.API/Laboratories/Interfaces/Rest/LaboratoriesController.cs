@@ -24,42 +24,37 @@ public class LaboratoriesController(
         CreateLaboratoryResource resource,
         CancellationToken cancellationToken)
     {
-        var details = new LaboratoryDetails(
-            resource.Name,
-            resource.Code,
-            Enum.Parse<LaboratoryType>(resource.Type, ignoreCase: true),
-            resource.Building,
-            resource.Floor,
-            resource.Room,
-            resource.Description,
-            resource.TemperatureMin,
-            resource.TemperatureMax,
-            resource.Co2Max,
-            Enum.Parse<GasSensitivity>(resource.GasSensitivity, ignoreCase: true),
-            resource.VibrationMax,
-            Enum.Parse<LaboratoryEscalation>(resource.Escalation, ignoreCase: true),
-            resource.Sensors,
-            resource.Notifications);
         var result = await laboratoriesCommandService.Handle(
-            new CreateLaboratoryCommand(details),
+            new CreateLaboratoryCommand(ToDetails(resource)),
             cancellationToken);
 
         if (result.IsFailure)
         {
-            if (result.DomainError.Type != EErrorType.Conflict)
-                throw new InvalidOperationException($"Unexpected laboratory creation error: {result.DomainError.Code}");
-
-            return Conflict(new ProblemDetails
-            {
-                Status = StatusCodes.Status409Conflict,
-                Title = "Laboratory code already exists",
-                Detail = result.DomainError.Message,
-                Instance = HttpContext.Request.Path
-            });
+            return HandleCommandFailure(result.DomainError);
         }
 
         var createdResource = LaboratoryResourceFromEntityAssembler.ToResource(result.Value!);
         return CreatedAtAction(nameof(GetById), new { id = createdResource.Id }, createdResource);
+    }
+
+    [HttpPut("{id:int}")]
+    [ProducesResponseType<LaboratoryResource>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<LaboratoryResource>> Update(
+        int id,
+        CreateLaboratoryResource resource,
+        CancellationToken cancellationToken)
+    {
+        var result = await laboratoriesCommandService.Handle(
+            new UpdateLaboratoryCommand(id, ToDetails(resource)),
+            cancellationToken);
+
+        if (result.IsFailure)
+            return HandleCommandFailure(result.DomainError);
+
+        return Ok(LaboratoryResourceFromEntityAssembler.ToResource(result.Value!));
     }
 
     [HttpGet]
@@ -86,5 +81,48 @@ public class LaboratoriesController(
             return NotFound();
 
         return Ok(LaboratoryResourceFromEntityAssembler.ToResource(laboratory));
+    }
+
+    private static LaboratoryDetails ToDetails(CreateLaboratoryResource resource)
+    {
+        return new LaboratoryDetails(
+            resource.Name,
+            resource.Code,
+            Enum.Parse<LaboratoryType>(resource.Type, ignoreCase: true),
+            resource.Building,
+            resource.Floor,
+            resource.Room,
+            resource.Description,
+            resource.TemperatureMin,
+            resource.TemperatureMax,
+            resource.Co2Max,
+            Enum.Parse<GasSensitivity>(resource.GasSensitivity, ignoreCase: true),
+            resource.VibrationMax,
+            Enum.Parse<LaboratoryEscalation>(resource.Escalation, ignoreCase: true),
+            resource.Sensors,
+            resource.Notifications);
+    }
+
+    private ActionResult<LaboratoryResource> HandleCommandFailure(Error error)
+    {
+        var statusCode = error.Type switch
+        {
+            EErrorType.Conflict => StatusCodes.Status409Conflict,
+            EErrorType.NotFound => StatusCodes.Status404NotFound,
+            _ => throw new InvalidOperationException($"Unexpected laboratory command error: {error.Code}")
+        };
+
+        return new ObjectResult(new ProblemDetails
+        {
+            Status = statusCode,
+            Title = error.Type == EErrorType.Conflict
+                ? "Laboratory code already exists"
+                : "Laboratory not found",
+            Detail = error.Message,
+            Instance = HttpContext.Request.Path
+        })
+        {
+            StatusCode = statusCode
+        };
     }
 }

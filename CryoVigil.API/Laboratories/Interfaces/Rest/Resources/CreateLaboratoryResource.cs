@@ -3,7 +3,7 @@ using CryoVigil.API.Laboratories.Domain.Model.ValueObjects;
 
 namespace CryoVigil.API.Laboratories.Interfaces.Rest.Resources;
 
-public record CreateLaboratoryResource
+public record CreateLaboratoryResource : IValidatableObject
 {
     [Required]
     [StringLength(100, MinimumLength = 1)]
@@ -45,4 +45,20 @@ public record CreateLaboratoryResource
 
     public LaboratorySensors Sensors { get; init; } = new();
     public LaboratoryNotifications Notifications { get; init; } = new();
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (TemperatureMin >= TemperatureMax)
+            yield return new ValidationResult(
+                "Minimum temperature must be less than maximum temperature.",
+                [nameof(TemperatureMin), nameof(TemperatureMax)]);
+
+        if (Co2Max <= 0)
+            yield return new ValidationResult("CO2 maximum must be greater than zero.", [nameof(Co2Max)]);
+
+        if (VibrationMax < 0)
+            yield return new ValidationResult(
+                "Vibration maximum cannot be negative.",
+                [nameof(VibrationMax)]);
+    }
 }

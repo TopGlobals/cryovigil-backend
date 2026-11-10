@@ -1,0 +1,10 @@
+using CryoVigil.API.History.Domain.Model.Aggregates;
+using CryoVigil.API.History.Domain.Model.Queries;
+
+namespace CryoVigil.API.History.Application.QueryServices;
+
+public interface IHistoryEventQueryService
+{
+    Task<IEnumerable<HistoryEvent>> Handle(GetAllHistoryEventsQuery query);
+    Task<HistoryEvent?> Handle(GetHistoryEventByIdQuery query);
+}

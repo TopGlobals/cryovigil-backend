@@ -77,6 +77,8 @@ builder.Services.AddScoped<DispatchDomainEventsInterceptor>();
 builder.Services.AddScoped<IGeneralSettingsRepository, GeneralSettingsRepository>();
 builder.Services.AddScoped<IGeneralSettingsQueryService, GeneralSettingsQueryService>();
 builder.Services.AddScoped<IGeneralSettingsCommandService, GeneralSettingsCommandService>();
+builder.Services.AddScoped<ISettingsQueryService, SettingsQueryService>();
+builder.Services.AddScoped<ISettingsCommandService, SettingsCommandService>();
 builder.Services.AddScoped<ILaboratoryRepository, LaboratoryRepository>();
 builder.Services.AddScoped<ILaboratoriesQueryService, LaboratoriesQueryService>();
 builder.Services.AddScoped<ILaboratoriesCommandService, LaboratoriesCommandService>();

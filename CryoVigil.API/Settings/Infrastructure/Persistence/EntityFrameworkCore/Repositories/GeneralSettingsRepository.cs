@@ -20,8 +20,36 @@ public class GeneralSettingsRepository(AppDbContext context) : IGeneralSettingsR
             .SingleOrDefaultAsync(settings => settings.Id == GeneralSettings.GlobalSettingsId, cancellationToken);
     }
 
+    public async Task<GeneralSettings?> FindByIdAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await context.Set<GeneralSettings>()
+            .FindAsync(new object[] { id }, cancellationToken);
+    }
+
+    public async Task<GeneralSettings?> FindByIdAsNoTrackingAsync(
+        int id,
+        CancellationToken cancellationToken = default)
+    {
+        return await context.Set<GeneralSettings>()
+            .AsNoTracking()
+            .SingleOrDefaultAsync(settings => settings.Id == id, cancellationToken);
+    }
+
+    public async Task<IEnumerable<GeneralSettings>> ListAsNoTrackingAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await context.Set<GeneralSettings>()
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task AddAsync(GeneralSettings settings, CancellationToken cancellationToken = default)
     {
         await context.Set<GeneralSettings>().AddAsync(settings, cancellationToken);
+    }
+
+    public void Remove(GeneralSettings settings)
+    {
+        context.Set<GeneralSettings>().Remove(settings);
     }
 }

@@ -5,9 +5,7 @@ using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Reposi
 
 namespace CryoVigil.API.History.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 
-public class HistoryEventRepository : BaseRepository<HistoryEvent>, IHistoryEventRepository
+public class HistoryEventRepository(AppDbContext context)
+    : BaseRepository<HistoryEvent>(context), IHistoryEventRepository
 {
-    public HistoryEventRepository(AppDbContext context) : base(context)
-    {
-    }
 }

@@ -8,13 +8,15 @@ public static class CreateHistoryEventCommandFromResourceAssembler
     public static CreateHistoryEventCommand ToCommandFromResource(CreateHistoryEventResource resource)
     {
         return new CreateHistoryEventCommand(
-            resource.EventCode,
-            resource.EventTime,
+            resource.TitleKey,
+            resource.Type,
+            resource.MessageKey,
             resource.Severity,
-            resource.SourceModule,
-            resource.UserEmail,
-            resource.EventAction,
-            resource.Message
+            resource.Location,
+            resource.Sensor,
+            resource.IsResolved,
+            resource.ActionsTakenKeys,
+            resource.Timestamp
         );
     }
 }

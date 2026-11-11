@@ -2,11 +2,17 @@ namespace CryoVigil.API.History.Interfaces.Rest.Resources;
 
 public record HistoryEventResource(
     int Id,
-    string EventCode,
-    DateTime EventTime,
+    string TitleKey,
+    string Type,
+    string MessageKey,
     string Severity,
-    string SourceModule,
-    string UserEmail,
-    string EventAction,
-    string Message
+    string Location,
+    string Sensor,
+    bool IsResolved,
+    IEnumerable<string> ActionsTakenKeys,
+    DateTime Timestamp,
+    string? SeverityLevel = null,
+    string? LocationName = null,
+    string? SensorCode = null,
+    DateTime? CreatedAt = null
 );

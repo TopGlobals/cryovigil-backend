@@ -9,13 +9,19 @@ public static class HistoryEventResourceFromEntityAssembler
     {
         return new HistoryEventResource(
             entity.Id,
-            entity.EventCode,
-            entity.EventTime,
+            entity.TitleKey,
+            entity.Type,
+            entity.MessageKey,
             entity.Severity,
-            entity.SourceModule,
-            entity.UserEmail,
-            entity.EventAction,
-            entity.Message
+            entity.Location,
+            entity.Sensor,
+            entity.IsResolved,
+            entity.ActionsTakenKeys,
+            entity.Timestamp,
+            entity.Severity,
+            entity.Location,
+            entity.Sensor,
+            entity.Timestamp
         );
     }
 }

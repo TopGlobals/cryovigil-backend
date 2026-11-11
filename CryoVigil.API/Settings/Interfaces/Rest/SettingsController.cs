@@ -106,10 +106,6 @@ public class SettingsController(
         return new SettingsDetails(
             resource.General.Region,
             Enum.Parse<TemperatureUnit>(resource.General.TemperatureUnit),
-            new ProfileSettingsDetails(
-                resource.Profile.Name,
-                resource.Profile.Email,
-                resource.Profile.Role),
             new NotificationSettingsDetails(
                 resource.Notifications.Email,
                 resource.Notifications.InApp,

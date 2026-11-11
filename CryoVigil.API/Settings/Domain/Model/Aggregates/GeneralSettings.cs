@@ -10,7 +10,6 @@ public class GeneralSettings
     {
         Region = string.Empty;
         Key = "global";
-        Profile = new ProfileSettings("Dr. Alex Vance", "alex.vance@topglobals.com", "Head Researcher");
         Notifications = new NotificationSettings(true, false, false, false, true, "2", "5");
         Security = new SecuritySettings(false);
         Sensors = [];
@@ -20,7 +19,6 @@ public class GeneralSettings
     {
         Id = GlobalSettingsId;
         Key = "global";
-        Profile = new ProfileSettings("Dr. Alex Vance", "alex.vance@topglobals.com", "Head Researcher");
         Notifications = new NotificationSettings(true, false, false, false, true, "2", "5");
         Security = new SecuritySettings(false);
         Sensors = [];
@@ -31,7 +29,6 @@ public class GeneralSettings
     public string Key { get; private set; }
     public string Region { get; private set; }
     public TemperatureUnit TemperatureUnit { get; private set; }
-    public ProfileSettings Profile { get; private set; }
     public NotificationSettings Notifications { get; private set; }
     public SecuritySettings Security { get; private set; }
     public ICollection<MonitoringSensor> Sensors { get; private set; }
@@ -44,13 +41,11 @@ public class GeneralSettings
     public void UpdateSettings(SettingsDetails details)
     {
         ArgumentNullException.ThrowIfNull(details);
-        ArgumentNullException.ThrowIfNull(details.Profile);
         ArgumentNullException.ThrowIfNull(details.Notifications);
         ArgumentNullException.ThrowIfNull(details.Sensors);
 
         Update(details.Region, details.TemperatureUnit);
         Key = "global";
-        Profile.Update(details.Profile.Name, details.Profile.Email, details.Profile.Role);
         Notifications.Update(
             details.Notifications.Email,
             details.Notifications.InApp,

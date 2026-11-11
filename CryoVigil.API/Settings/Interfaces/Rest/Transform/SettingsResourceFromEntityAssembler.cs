@@ -11,12 +11,6 @@ public static class SettingsResourceFromEntityAssembler
         return new SettingsResource(
             settings.Id,
             settings.Key,
-            new ProfileSettingsResource
-            {
-                Name = settings.Profile.Name,
-                Email = settings.Profile.Email,
-                Role = settings.Profile.Role
-            },
             new GeneralPreferencesResource
             {
                 Region = settings.Region,

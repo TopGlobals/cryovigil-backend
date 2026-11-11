@@ -32,13 +32,6 @@ public static class ModelBuilderExtensions
                 .HasConversion<string>()
                 .HasMaxLength(20);
 
-            entity.OwnsOne(settings => settings.Profile, profile =>
-            {
-                profile.Property(value => value.Name).HasColumnName("profile_name").IsRequired().HasMaxLength(100);
-                profile.Property(value => value.Email).HasColumnName("profile_email").IsRequired().HasMaxLength(254);
-                profile.Property(value => value.Role).HasColumnName("profile_role").IsRequired().HasMaxLength(100);
-            });
-
             entity.OwnsOne(settings => settings.Notifications, notifications =>
             {
                 notifications.Property(value => value.Email).HasColumnName("notification_email").IsRequired();

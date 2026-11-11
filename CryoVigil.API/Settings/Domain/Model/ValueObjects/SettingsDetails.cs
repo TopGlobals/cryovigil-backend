@@ -1,7 +1,5 @@
 namespace CryoVigil.API.Settings.Domain.Model.ValueObjects;
 
-public record ProfileSettingsDetails(string Name, string Email, string Role);
-
 public record NotificationSettingsDetails(
     bool Email,
     bool InApp,
@@ -23,7 +21,6 @@ public record MonitoringSensorDetails(
 public record SettingsDetails(
     string Region,
     TemperatureUnit TemperatureUnit,
-    ProfileSettingsDetails Profile,
     NotificationSettingsDetails Notifications,
     bool TwoFactorEnabled,
     IReadOnlyCollection<MonitoringSensorDetails> Sensors);

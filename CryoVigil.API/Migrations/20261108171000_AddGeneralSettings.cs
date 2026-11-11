@@ -22,7 +22,8 @@ public class AddGeneralSettings : Migration
 
         migrationBuilder.Sql(
             "INSERT INTO `general_settings` (`id`, `region`, `temperature_unit`) " +
-            "VALUES (1, 'Europe/Zurich', 'Celsius');");
+            "VALUES (1, 'Europe/Zurich', 'Celsius') " +
+            "ON DUPLICATE KEY UPDATE `id` = `id`;");
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)

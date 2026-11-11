@@ -6,6 +6,12 @@ using CryoVigil.API.Alerts.Application.Internal.QueryServices;
 using CryoVigil.API.Alerts.Application.QueryServices;
 using CryoVigil.API.Alerts.Domain.Repositories;
 using CryoVigil.API.Alerts.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using CryoVigil.API.History.Application.CommandServices;
+using CryoVigil.API.History.Application.Internal.CommandServices;
+using CryoVigil.API.History.Application.Internal.QueryServices;
+using CryoVigil.API.History.Application.QueryServices;
+using CryoVigil.API.History.Domain.Repositories;
+using CryoVigil.API.History.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using CryoVigil.API.Settings.Application.CommandServices;
 using CryoVigil.API.Settings.Application.Internal.CommandServices;
 using CryoVigil.API.Settings.Application.Internal.QueryServices;
@@ -102,6 +108,11 @@ builder.Services.AddScoped<ILaboratoriesCommandService, LaboratoriesCommandServi
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();
 builder.Services.AddScoped<IAlertsQueryService, AlertsQueryService>();
 builder.Services.AddScoped<IAlertsCommandService, AlertsCommandService>();
+
+// History Bounded Context
+builder.Services.AddScoped<IHistoryEventRepository, HistoryEventRepository>();
+builder.Services.AddScoped<IHistoryEventQueryService, HistoryEventQueryService>();
+builder.Services.AddScoped<IHistoryEventCommandService, HistoryEventCommandService>();
 
 // Mediator pipeline behaviors
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));

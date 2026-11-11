@@ -8,6 +8,17 @@ public static class ModelBuilderExtensions
     {
         foreach (var entity in builder.Model.GetEntityTypes())
         {
+            if (entity.IsOwned())
+            {
+                // Owned entities sharing the owner's table must preserve the owner's PK column mapping (e.g. 'id')
+                foreach (var property in entity.GetProperties())
+                {
+                    if (property.IsPrimaryKey() || property.IsForeignKey()) continue;
+                    property.SetColumnName(property.GetColumnName().ToSnakeCase());
+                }
+                continue;
+            }
+
             var tableName = entity.GetTableName();
             if (!string.IsNullOrEmpty(tableName)) entity.SetTableName(tableName.ToPlural().ToSnakeCase());
 

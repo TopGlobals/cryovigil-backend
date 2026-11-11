@@ -5,5 +5,7 @@ namespace CryoVigil.API.Alerts.Application.QueryServices;
 
 public interface IAlertsQueryService
 {
-    Task<IEnumerable<Alert>> Handle(GetAlertsByLaboratoryIdQuery query, CancellationToken cancellationToken);
+    Task<IEnumerable<Alert>> Handle(GetAllAlertsQuery query, CancellationToken cancellationToken = default);
+
+    Task<Alert?> Handle(GetAlertByIdQuery query, CancellationToken cancellationToken = default);
 }

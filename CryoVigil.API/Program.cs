@@ -1,5 +1,17 @@
 using Cortex.Mediator.Commands;
 using Cortex.Mediator.DependencyInjection;
+using CryoVigil.API.Alerts.Application.CommandServices;
+using CryoVigil.API.Alerts.Application.Internal.CommandServices;
+using CryoVigil.API.Alerts.Application.Internal.QueryServices;
+using CryoVigil.API.Alerts.Application.QueryServices;
+using CryoVigil.API.Alerts.Domain.Repositories;
+using CryoVigil.API.Alerts.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using CryoVigil.API.Settings.Application.CommandServices;
+using CryoVigil.API.Settings.Application.Internal.CommandServices;
+using CryoVigil.API.Settings.Application.Internal.QueryServices;
+using CryoVigil.API.Settings.Application.QueryServices;
+using CryoVigil.API.Settings.Domain.Repositories;
+using CryoVigil.API.Settings.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using CryoVigil.API.Laboratories.Application.CommandServices;
 using CryoVigil.API.Laboratories.Application.Internal.CommandServices;
 using CryoVigil.API.Laboratories.Application.Internal.QueryServices;
@@ -16,12 +28,6 @@ using CryoVigil.API.Shared.Infrastructure.Pipeline.Middleware.Components;
 using CryoVigil.API.Shared.Interfaces.Rest.ProblemDetails;
 using CryoVigil.API.Shared.Resources;
 using CryoVigil.API.Shared.Resources.Errors;
-using CryoVigil.API.Settings.Application.CommandServices;
-using CryoVigil.API.Settings.Application.Internal.CommandServices;
-using CryoVigil.API.Settings.Application.Internal.QueryServices;
-using CryoVigil.API.Settings.Application.QueryServices;
-using CryoVigil.API.Settings.Domain.Repositories;
-using CryoVigil.API.Settings.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Scalar.AspNetCore;
@@ -81,6 +87,12 @@ builder.Services.AddScoped<ILaboratoryRepository, LaboratoryRepository>();
 builder.Services.AddScoped<ILaboratoriesQueryService, LaboratoriesQueryService>();
 builder.Services.AddScoped<ILaboratoriesCommandService, LaboratoriesCommandService>();
 
+// Alerts Bounded Context
+builder.Services.AddScoped<IAlertRepository, AlertRepository>();
+builder.Services.AddScoped<IAlertsQueryService, AlertsQueryService>();
+builder.Services.AddScoped<IAlertsCommandService, AlertsCommandService>();
+
+// Mediator pipeline behaviors
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(ExceptionHandlingCommandBehavior<>));
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(TransactionCommandBehavior<>));

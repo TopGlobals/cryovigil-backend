@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace CryoVigil.API.History.Interfaces.Rest;
 
 [ApiController]
-[Route("api/v1/history")]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("Available History endpoints")]

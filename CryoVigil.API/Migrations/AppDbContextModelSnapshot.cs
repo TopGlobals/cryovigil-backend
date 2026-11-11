@@ -202,6 +202,36 @@ namespace CryoVigil.API.Migrations
                     b.ToTable("laboratories", (string)null);
                 });
 
+            modelBuilder.Entity("CryoVigil.API.Profiles.Domain.Model.Aggregates.UserProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("varchar(254)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("role");
+
+                    b.HasKey("Id")
+                        .HasName("pk_profiles");
+
+                    b.ToTable("profiles", (string)null);
+                });
+
             modelBuilder.Entity("CryoVigil.API.Settings.Domain.Model.Aggregates.GeneralSettings", b =>
                 {
                     b.Property<int>("Id")
@@ -360,37 +390,6 @@ namespace CryoVigil.API.Migrations
                                 .HasForeignKey("GeneralSettingsId");
                         });
 
-                    b.OwnsOne("CryoVigil.API.Settings.Domain.Model.ValueObjects.ProfileSettings", "Profile", b1 =>
-                        {
-                            b1.Property<int>("GeneralSettingsId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Email")
-                                .IsRequired()
-                                .HasMaxLength(254)
-                                .HasColumnType("varchar(254)")
-                                .HasColumnName("profile_email");
-
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("varchar(100)")
-                                .HasColumnName("profile_name");
-
-                            b1.Property<string>("Role")
-                                .IsRequired()
-                                .HasMaxLength(100)
-                                .HasColumnType("varchar(100)")
-                                .HasColumnName("profile_role");
-
-                            b1.HasKey("GeneralSettingsId");
-
-                            b1.ToTable("settings");
-
-                            b1.WithOwner()
-                                .HasForeignKey("GeneralSettingsId");
-                        });
-
                     b.OwnsOne("CryoVigil.API.Settings.Domain.Model.ValueObjects.SecuritySettings", "Security", b1 =>
                         {
                             b1.Property<int>("GeneralSettingsId")
@@ -464,9 +463,6 @@ namespace CryoVigil.API.Migrations
                         });
 
                     b.Navigation("Notifications")
-                        .IsRequired();
-
-                    b.Navigation("Profile")
                         .IsRequired();
 
                     b.Navigation("Security")

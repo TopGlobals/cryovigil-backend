@@ -5,5 +5,5 @@ namespace CryoVigil.API.History.Application.CommandServices;
 
 public interface IHistoryEventCommandService
 {
-    Task<HistoryEvent?> Handle(CreateHistoryEventCommand command);
+    Task<HistoryEvent?> Handle(CreateHistoryEventCommand command, CancellationToken cancellationToken = default);
 }

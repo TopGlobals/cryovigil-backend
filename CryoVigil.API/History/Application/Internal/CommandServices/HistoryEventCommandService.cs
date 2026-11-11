@@ -6,31 +6,28 @@ using CryoVigil.API.Shared.Domain.Repositories;
 
 namespace CryoVigil.API.History.Application.Internal.CommandServices;
 
-public class HistoryEventCommandService : IHistoryEventCommandService
+public class HistoryEventCommandService(
+    IHistoryEventRepository historyEventRepository,
+    IUnitOfWork unitOfWork) : IHistoryEventCommandService
 {
-    private readonly IHistoryEventRepository _historyEventRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public HistoryEventCommandService(IHistoryEventRepository historyEventRepository, IUnitOfWork unitOfWork)
-    {
-        _historyEventRepository = historyEventRepository;
-        _unitOfWork = unitOfWork;
-    }
-
-    public async Task<HistoryEvent?> Handle(CreateHistoryEventCommand command)
+    public async Task<HistoryEvent?> Handle(
+        CreateHistoryEventCommand command,
+        CancellationToken cancellationToken = default)
     {
         var historyEvent = new HistoryEvent(
-            command.EventCode,
-            command.EventTime,
+            command.TitleKey,
+            command.Type,
+            command.MessageKey,
             command.Severity,
-            command.SourceModule,
-            command.UserEmail,
-            command.EventAction,
-            command.Message
+            command.Location,
+            command.Sensor,
+            command.IsResolved,
+            command.ActionsTakenKeys,
+            command.Timestamp
         );
 
-        await _historyEventRepository.AddAsync(historyEvent);
-        await _unitOfWork.CompleteAsync();
+        await historyEventRepository.AddAsync(historyEvent, cancellationToken);
+        await unitOfWork.CompleteAsync(cancellationToken);
 
         return historyEvent;
     }

@@ -5,22 +5,19 @@ using CryoVigil.API.History.Domain.Repositories;
 
 namespace CryoVigil.API.History.Application.Internal.QueryServices;
 
-public class HistoryEventQueryService : IHistoryEventQueryService
+public class HistoryEventQueryService(IHistoryEventRepository historyEventRepository) : IHistoryEventQueryService
 {
-    private readonly IHistoryEventRepository _historyEventRepository;
-
-    public HistoryEventQueryService(IHistoryEventRepository historyEventRepository)
+    public async Task<IEnumerable<HistoryEvent>> Handle(
+        GetAllHistoryEventsQuery query,
+        CancellationToken cancellationToken = default)
     {
-        _historyEventRepository = historyEventRepository;
+        return await historyEventRepository.ListAsync(cancellationToken);
     }
 
-    public async Task<IEnumerable<HistoryEvent>> Handle(GetAllHistoryEventsQuery query)
+    public async Task<HistoryEvent?> Handle(
+        GetHistoryEventByIdQuery query,
+        CancellationToken cancellationToken = default)
     {
-        return await _historyEventRepository.ListAsync();
-    }
-
-    public async Task<HistoryEvent?> Handle(GetHistoryEventByIdQuery query)
-    {
-        return await _historyEventRepository.FindByIdAsync(query.Id);
+        return await historyEventRepository.FindByIdAsync(query.Id, cancellationToken);
     }
 }

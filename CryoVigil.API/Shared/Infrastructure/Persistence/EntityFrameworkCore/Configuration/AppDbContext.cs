@@ -2,6 +2,7 @@ using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Config
 using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Interceptors;
 using CryoVigil.API.Alerts.Infrastructure.Persistence.Efc.Configuration.Extensions;
 using CryoVigil.API.Laboratories.Infrastructure.Persistence.Efc.Configuration.Extensions;
+using CryoVigil.API.Profiles.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using CryoVigil.API.Settings.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +22,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         builder.UseSnakeCaseNamingConvention();
         builder.ApplyAlertConfiguration();
         builder.ApplyLaboratoryConfiguration();
+        builder.ApplyProfileConfiguration();
         builder.ApplySettingsConfiguration();
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using CryoVigil.API.Alerts.Domain.Model.ValueObjects;
 using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -184,6 +185,68 @@ namespace CryoVigil.API.Migrations
                         .HasDatabaseName("ix_corrective_actions_alert_id");
 
                     b.ToTable("corrective_actions", (string)null);
+                });
+
+            modelBuilder.Entity("CryoVigil.API.History.Domain.Model.Aggregates.HistoryEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("id");
+
+                    b.Property<List<string>>("ActionsTakenKeys")
+                        .HasMaxLength(1000)
+                        .HasColumnType("varchar(1000)")
+                        .HasColumnName("actions_taken_keys");
+
+                    b.Property<bool>("IsResolved")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_resolved");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("location");
+
+                    b.Property<string>("MessageKey")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("message_key");
+
+                    b.Property<string>("Sensor")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("sensor");
+
+                    b.Property<string>("Severity")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
+                        .HasColumnName("severity");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime")
+                        .HasColumnName("timestamp");
+
+                    b.Property<string>("TitleKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("title_key");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_history_events");
+
+                    b.ToTable("history_events", (string)null);
                 });
 
             modelBuilder.Entity("CryoVigil.API.Laboratories.Domain.Model.Aggregates.Laboratory", b =>

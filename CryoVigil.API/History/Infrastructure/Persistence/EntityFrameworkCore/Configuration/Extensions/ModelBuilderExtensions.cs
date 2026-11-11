@@ -1,6 +1,7 @@
 using System.Text.Json;
 using CryoVigil.API.History.Domain.Model.Aggregates;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CryoVigil.API.History.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 
@@ -20,7 +21,7 @@ public static class ModelBuilderExtensions
             entity.Property(e => e.Location).HasColumnName("location").IsRequired().HasMaxLength(100);
             entity.Property(e => e.Sensor).HasColumnName("sensor").IsRequired().HasMaxLength(50);
             entity.Property(e => e.IsResolved).HasColumnName("is_resolved").IsRequired();
-            entity.Property(e => e.ActionsTakenKeys)
+            var actionsTakenKeys = entity.Property(e => e.ActionsTakenKeys)
                 .HasColumnName("actions_taken_keys")
                 .HasConversion(
                     v => JsonSerializer.Serialize(v ?? new List<string>(), (JsonSerializerOptions?)null),
@@ -29,6 +30,10 @@ public static class ModelBuilderExtensions
                         : JsonSerializer.Deserialize<List<string>>(v, (JsonSerializerOptions?)null) ?? new List<string>())
                 .HasMaxLength(1000)
                 .IsRequired(false);
+            actionsTakenKeys.Metadata.SetValueComparer(new ValueComparer<List<string>>(
+                    (left, right) => left != null && right != null && left.SequenceEqual(right),
+                    value => value.Aggregate(0, (hash, item) => HashCode.Combine(hash, item.GetHashCode())),
+                    value => value.ToList()));
             entity.Property(e => e.Timestamp).HasColumnName("timestamp").IsRequired();
         });
     }

@@ -3,6 +3,7 @@ using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Interc
 using CryoVigil.API.Alerts.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using CryoVigil.API.History.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using CryoVigil.API.Laboratories.Infrastructure.Persistence.Efc.Configuration.Extensions;
+using CryoVigil.API.Profiles.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using CryoVigil.API.Settings.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -23,6 +24,7 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
         base.OnModelCreating(builder);
         builder.ApplyAlertsConfiguration();
         builder.ApplyLaboratoryConfiguration();
+        builder.ApplyProfileConfiguration();
         builder.ApplySettingsConfiguration();
         builder.ApplyHistoryConfiguration();
         builder.UseSnakeCaseNamingConvention();

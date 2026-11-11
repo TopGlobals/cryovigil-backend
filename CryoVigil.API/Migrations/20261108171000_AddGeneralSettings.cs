@@ -20,10 +20,10 @@ public class AddGeneralSettings : Migration
             },
             constraints: table => table.PrimaryKey("pk_general_settings", settings => settings.id));
 
-        migrationBuilder.InsertData(
-            table: "general_settings",
-            columns: ["id", "region", "temperature_unit"],
-            values: new object[] { 1, "Europe/Zurich", "Celsius" });
+        migrationBuilder.Sql(
+            "INSERT INTO `general_settings` (`id`, `region`, `temperature_unit`) " +
+            "VALUES (1, 'Europe/Zurich', 'Celsius') " +
+            "ON DUPLICATE KEY UPDATE `id` = `id`;");
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)

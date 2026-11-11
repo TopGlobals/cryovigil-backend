@@ -12,6 +12,12 @@ using CryoVigil.API.Settings.Application.Internal.QueryServices;
 using CryoVigil.API.Settings.Application.QueryServices;
 using CryoVigil.API.Settings.Domain.Repositories;
 using CryoVigil.API.Settings.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using CryoVigil.API.Laboratories.Application.CommandServices;
+using CryoVigil.API.Laboratories.Application.Internal.CommandServices;
+using CryoVigil.API.Laboratories.Application.Internal.QueryServices;
+using CryoVigil.API.Laboratories.Application.QueryServices;
+using CryoVigil.API.Laboratories.Domain.Repositories;
+using CryoVigil.API.Laboratories.Infrastructure.Persistence.Efc.Repositories;
 using CryoVigil.API.Shared.Domain.Repositories;
 using CryoVigil.API.Shared.Infrastructure.Interfaces.AspNetCore.Configuration;
 using CryoVigil.API.Shared.Infrastructure.Mediator.Cortex.Configuration;
@@ -72,14 +78,14 @@ builder.Services.AddSingleton<ProblemDetailsFactory>();
 
 builder.Services.AddOpenApi();
 
-// Shared
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<DispatchDomainEventsInterceptor>();
-
-// Settings Bounded Context
 builder.Services.AddScoped<IGeneralSettingsRepository, GeneralSettingsRepository>();
 builder.Services.AddScoped<IGeneralSettingsQueryService, GeneralSettingsQueryService>();
 builder.Services.AddScoped<IGeneralSettingsCommandService, GeneralSettingsCommandService>();
+builder.Services.AddScoped<ILaboratoryRepository, LaboratoryRepository>();
+builder.Services.AddScoped<ILaboratoriesQueryService, LaboratoriesQueryService>();
+builder.Services.AddScoped<ILaboratoriesCommandService, LaboratoriesCommandService>();
 
 // Alerts Bounded Context
 builder.Services.AddScoped<IAlertRepository, AlertRepository>();

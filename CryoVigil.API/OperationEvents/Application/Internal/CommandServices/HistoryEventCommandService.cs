@@ -26,8 +26,8 @@ public class HistoryEventCommandService(
             command.Timestamp
         );
 
-        await historyEventRepository.AddAsync(historyEvent);
-        await unitOfWork.CompleteAsync();
+        await historyEventRepository.AddAsync(historyEvent, cancellationToken);
+        await unitOfWork.CompleteAsync(cancellationToken);
 
         return historyEvent;
     }
@@ -36,13 +36,13 @@ public class HistoryEventCommandService(
         DeleteHistoryEventCommand command,
         CancellationToken cancellationToken = default)
     {
-        var historyEvent = await historyEventRepository.FindByIdAsync(command.Id);
+        var historyEvent = await historyEventRepository.FindByIdAsync(command.Id, cancellationToken);
 
         if (historyEvent == null)
             return false;
 
         historyEventRepository.Remove(historyEvent);
-        await unitOfWork.CompleteAsync();
+        await unitOfWork.CompleteAsync(cancellationToken);
 
         return true;
     }

@@ -1,7 +1,7 @@
-using CryoVigil.API.History.Domain.Model.Aggregates;
-using CryoVigil.API.History.Interfaces.Rest.Resources;
+using CryoVigil.API.OperationEvents.Domain.Model.Aggregates;
+using CryoVigil.API.OperationEvents.Interfaces.Rest.Resources;
 
-namespace CryoVigil.API.History.Interfaces.Rest.Transform;
+namespace CryoVigil.API.OperationEvents.Interfaces.Rest.Transform;
 
 public static class HistoryEventResourceFromEntityAssembler
 {

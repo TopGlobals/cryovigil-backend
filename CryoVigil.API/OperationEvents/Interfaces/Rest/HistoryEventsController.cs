@@ -1,12 +1,12 @@
 using System.Net.Mime;
-using CryoVigil.API.History.Application.CommandServices;
-using CryoVigil.API.History.Application.QueryServices;
-using CryoVigil.API.History.Domain.Model.Queries;
-using CryoVigil.API.History.Interfaces.Rest.Resources;
-using CryoVigil.API.History.Interfaces.Rest.Transform;
+using CryoVigil.API.OperationEvents.Application.CommandServices;
+using CryoVigil.API.OperationEvents.Application.QueryServices;
+using CryoVigil.API.OperationEvents.Domain.Model.Queries;
+using CryoVigil.API.OperationEvents.Interfaces.Rest.Resources;
+using CryoVigil.API.OperationEvents.Interfaces.Rest.Transform;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CryoVigil.API.History.Interfaces.Rest;
+namespace CryoVigil.API.OperationEvents.Interfaces.Rest;
 
 [ApiController]
 [Route("api/v1/[controller]")]
@@ -17,7 +17,7 @@ public class HistoryEventsController(
     IHistoryEventQueryService historyEventQueryService) : ControllerBase
 {
     [HttpPost]
-    [EndpointSummary("Create a history event")]
+    [EndpointSummary("Create a Operation event")]
     [EndpointDescription("Registers a new incident or system action into the history log.")]
     [ProducesResponseType(typeof(HistoryEventResource), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -34,7 +34,7 @@ public class HistoryEventsController(
     }
 
     [HttpGet]
-    [EndpointSummary("Get all history events")]
+    [EndpointSummary("Get all Operation events")]
     [EndpointDescription("Retrieves all logged history events with actions taken and timestamps.")]
     [ProducesResponseType(typeof(IEnumerable<HistoryEventResource>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllHistoryEvents(CancellationToken cancellationToken)
@@ -45,7 +45,7 @@ public class HistoryEventsController(
     }
 
     [HttpGet("{id:int}")]
-    [EndpointSummary("Get a history event by ID")]
+    [EndpointSummary("Get a Operation event by ID")]
     [EndpointDescription("Retrieves a specific history event by its unique integer identifier.")]
     [ProducesResponseType(typeof(HistoryEventResource), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -38,6 +38,46 @@ public class GlobalExceptionHandler(
             });
         }
 
+        if (exception is ArgumentException argEx)
+        {
+            logger.LogWarning(argEx, "Validation or argument error: {Message}", argEx.Message);
+            var problemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Validation Error",
+                Detail = argEx.Message,
+                Instance = httpContext.Request.Path
+            };
+
+            httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
+            {
+                HttpContext = httpContext,
+                ProblemDetails = problemDetails,
+                Exception = exception
+            });
+        }
+
+        if (exception is KeyNotFoundException notFoundEx)
+        {
+            logger.LogWarning(notFoundEx, "Resource not found: {Message}", notFoundEx.Message);
+            var problemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Title = "Not Found",
+                Detail = notFoundEx.Message,
+                Instance = httpContext.Request.Path
+            };
+
+            httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+            return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
+            {
+                HttpContext = httpContext,
+                ProblemDetails = problemDetails,
+                Exception = exception
+            });
+        }
+
         logger.LogError(exception, "An unhandled exception occurred: {Message}", exception.Message);
 
         var genericProblemDetails = new ProblemDetails

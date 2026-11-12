@@ -186,7 +186,7 @@ namespace CryoVigil.API.Migrations
                     b.ToTable("corrective_actions", (string)null);
                 });
 
-            modelBuilder.Entity("CryoVigil.API.History.Domain.Model.Aggregates.HistoryEvent", b =>
+            modelBuilder.Entity("CryoVigil.API.OperationEvents.Domain.Model.Aggregates.HistoryEvent", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

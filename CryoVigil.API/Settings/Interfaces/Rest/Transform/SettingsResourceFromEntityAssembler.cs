@@ -18,19 +18,19 @@ public static class SettingsResourceFromEntityAssembler
             },
             new NotificationSettingsResource
             {
-                Email = settings.Notifications.Email,
-                InApp = settings.Notifications.InApp,
-                DailySummary = settings.Notifications.DailySummary,
-                WeeklyReport = settings.Notifications.WeeklyReport,
-                InstantAlerts = settings.Notifications.InstantAlerts,
-                WarningThreshold = settings.Notifications.WarningThreshold,
-                CriticalThreshold = settings.Notifications.CriticalThreshold
+                Email = settings.Notifications?.Email ?? false,
+                InApp = settings.Notifications?.InApp ?? false,
+                DailySummary = settings.Notifications?.DailySummary ?? false,
+                WeeklyReport = settings.Notifications?.WeeklyReport ?? false,
+                InstantAlerts = settings.Notifications?.InstantAlerts ?? false,
+                WarningThreshold = settings.Notifications?.WarningThreshold ?? "2",
+                CriticalThreshold = settings.Notifications?.CriticalThreshold ?? "5"
             },
             new SecuritySettingsResource
             {
-                TwoFactorEnabled = settings.Security.TwoFactorEnabled
+                TwoFactorEnabled = settings.Security?.TwoFactorEnabled ?? false
             },
-            settings.Sensors.Select(ToResource));
+            (settings.Sensors ?? []).Select(ToResource));
     }
 
     private static MonitoringSensorResource ToResource(MonitoringSensor sensor)

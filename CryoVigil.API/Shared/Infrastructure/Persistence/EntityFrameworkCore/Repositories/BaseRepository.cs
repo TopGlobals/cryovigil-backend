@@ -31,9 +31,23 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
 
     public virtual async Task<TEntity?> FindByIdAsNoTrackingAsync(int id, CancellationToken cancellationToken = default)
     {
+        var keyProperty = Context.Model.FindEntityType(typeof(TEntity))?.FindPrimaryKey()?.Properties[0];
+        if (keyProperty is null) return null;
+
+        var keyName = keyProperty.Name;
+        var keyType = keyProperty.ClrType;
+
+        if (keyType == typeof(int))
+        {
+            return await Context.Set<TEntity>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(e => EF.Property<int>(e, keyName) == id, cancellationToken);
+        }
+
+        var keyValue = Activator.CreateInstance(keyType, id);
         return await Context.Set<TEntity>()
             .AsNoTracking()
-            .FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id, cancellationToken);
+            .FirstOrDefaultAsync(e => EF.Property<object>(e, keyName).Equals(keyValue), cancellationToken);
     }
 
     public void Update(TEntity entity)

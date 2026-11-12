@@ -103,26 +103,39 @@ public class SettingsController(
 
     private static SettingsDetails ToDetails(SettingsRequestResource resource)
     {
-        return new SettingsDetails(
-            resource.General.Region,
-            Enum.Parse<TemperatureUnit>(resource.General.TemperatureUnit),
-            new NotificationSettingsDetails(
+        var tempUnit = Enum.TryParse<TemperatureUnit>(resource.General?.TemperatureUnit, ignoreCase: true, out var parsedUnit)
+            ? parsedUnit
+            : TemperatureUnit.Celsius;
+
+        var notifications = resource.Notifications is not null
+            ? new NotificationSettingsDetails(
                 resource.Notifications.Email,
                 resource.Notifications.InApp,
                 resource.Notifications.DailySummary,
                 resource.Notifications.WeeklyReport,
                 resource.Notifications.InstantAlerts,
                 resource.Notifications.WarningThreshold,
-                resource.Notifications.CriticalThreshold),
-            resource.Security.TwoFactorEnabled,
-            resource.Sensors.Select(sensor => new MonitoringSensorDetails(
+                resource.Notifications.CriticalThreshold)
+            : new NotificationSettingsDetails(true, false, false, false, true, "2", "5");
+
+        var sensors = (resource.Sensors ?? [])
+            .Where(sensor => sensor is not null)
+            .Select(sensor => new MonitoringSensorDetails(
                 sensor.Id,
                 sensor.Name,
                 sensor.Model,
                 sensor.Serial,
                 sensor.Type,
                 sensor.Location,
-                sensor.Status)).ToList());
+                sensor.Status))
+            .ToList();
+
+        return new SettingsDetails(
+            resource.General?.Region ?? "Europe/Zurich",
+            tempUnit,
+            notifications,
+            resource.Security?.TwoFactorEnabled ?? false,
+            sensors);
     }
 
     private ObjectResult HandleCommandFailure(Error error)
@@ -131,13 +144,21 @@ public class SettingsController(
         {
             EErrorType.Conflict => StatusCodes.Status409Conflict,
             EErrorType.NotFound => StatusCodes.Status404NotFound,
-            _ => throw new InvalidOperationException($"Unexpected settings command error: {error.Code}")
+            EErrorType.Validation => StatusCodes.Status400BadRequest,
+            _ => StatusCodes.Status400BadRequest
+        };
+
+        var title = error.Type switch
+        {
+            EErrorType.Conflict => "Settings conflict",
+            EErrorType.NotFound => "Settings not found",
+            _ => "Bad request"
         };
 
         return new ObjectResult(new ProblemDetails
         {
             Status = statusCode,
-            Title = error.Type == EErrorType.Conflict ? "Settings already exist" : "Settings not found",
+            Title = title,
             Detail = error.Message,
             Instance = HttpContext.Request.Path
         })

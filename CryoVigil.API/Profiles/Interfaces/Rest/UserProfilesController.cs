@@ -16,11 +16,14 @@ public class UserProfilesController(
 {
     [HttpGet]
     [ProducesResponseType<UserProfileResource>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserProfileResource>> Get(CancellationToken cancellationToken)
     {
         var profile = await profileQueryService.Handle(
             new GetCurrentProfileQuery(),
             cancellationToken);
+
+        if (profile is null) return NotFound();
 
         return Ok(UserProfileResourceFromEntityAssembler.ToResource(profile));
     }
@@ -32,10 +35,23 @@ public class UserProfilesController(
         UserProfileResource resource,
         CancellationToken cancellationToken)
     {
-        var profile = await profileCommandService.Handle(
-            new UpdateCurrentProfileCommand(resource.Name, resource.Email, resource.Role),
-            cancellationToken);
+        try
+        {
+            var profile = await profileCommandService.Handle(
+                new UpdateCurrentProfileCommand(resource.Name, resource.Email, resource.Role),
+                cancellationToken);
 
-        return Ok(UserProfileResourceFromEntityAssembler.ToResource(profile));
+            return Ok(UserProfileResourceFromEntityAssembler.ToResource(profile));
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Invalid user profile data",
+                Detail = ex.Message,
+                Instance = HttpContext.Request.Path
+            });
+        }
     }
 }

@@ -10,12 +10,14 @@ public class GeneralSettingsRepository(AppDbContext context) : IGeneralSettingsR
     public async Task<GeneralSettings?> FindGlobalAsync(CancellationToken cancellationToken = default)
     {
         return await context.Set<GeneralSettings>()
-            .FindAsync(new object[] { GeneralSettings.GlobalSettingsId }, cancellationToken);
+            .Include(s => s.Sensors)
+            .FirstOrDefaultAsync(settings => settings.Id == GeneralSettings.GlobalSettingsId, cancellationToken);
     }
 
     public async Task<GeneralSettings?> FindGlobalAsNoTrackingAsync(CancellationToken cancellationToken = default)
     {
         return await context.Set<GeneralSettings>()
+            .Include(s => s.Sensors)
             .AsNoTracking()
             .SingleOrDefaultAsync(settings => settings.Id == GeneralSettings.GlobalSettingsId, cancellationToken);
     }
@@ -23,7 +25,8 @@ public class GeneralSettingsRepository(AppDbContext context) : IGeneralSettingsR
     public async Task<GeneralSettings?> FindByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await context.Set<GeneralSettings>()
-            .FindAsync(new object[] { id }, cancellationToken);
+            .Include(s => s.Sensors)
+            .FirstOrDefaultAsync(settings => settings.Id == id, cancellationToken);
     }
 
     public async Task<GeneralSettings?> FindByIdAsNoTrackingAsync(
@@ -31,6 +34,7 @@ public class GeneralSettingsRepository(AppDbContext context) : IGeneralSettingsR
         CancellationToken cancellationToken = default)
     {
         return await context.Set<GeneralSettings>()
+            .Include(s => s.Sensors)
             .AsNoTracking()
             .SingleOrDefaultAsync(settings => settings.Id == id, cancellationToken);
     }
@@ -39,6 +43,7 @@ public class GeneralSettingsRepository(AppDbContext context) : IGeneralSettingsR
         CancellationToken cancellationToken = default)
     {
         return await context.Set<GeneralSettings>()
+            .Include(s => s.Sensors)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }

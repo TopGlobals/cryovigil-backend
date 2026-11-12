@@ -1,9 +1,9 @@
 using System.Text.Json;
-using CryoVigil.API.History.Domain.Model.Aggregates;
+using CryoVigil.API.OperationEvents.Domain.Model.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace CryoVigil.API.History.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
+namespace CryoVigil.API.OperationEvents.Infrastructure.Persistence.EntityFrameworkCore.Configuration.Extensions;
 
 public static class ModelBuilderExtensions
 {

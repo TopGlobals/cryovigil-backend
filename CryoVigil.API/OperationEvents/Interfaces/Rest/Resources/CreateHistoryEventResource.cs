@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace CryoVigil.API.History.Interfaces.Rest.Resources;
+namespace CryoVigil.API.OperationEvents.Interfaces.Rest.Resources;
 
 public record CreateHistoryEventResource(
     [Required]

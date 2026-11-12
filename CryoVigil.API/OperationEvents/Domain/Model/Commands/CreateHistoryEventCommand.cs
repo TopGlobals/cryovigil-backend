@@ -1,4 +1,4 @@
-namespace CryoVigil.API.History.Domain.Model.Commands;
+namespace CryoVigil.API.OperationEvents.Domain.Model.Commands;
 
 public record CreateHistoryEventCommand(
     string TitleKey,

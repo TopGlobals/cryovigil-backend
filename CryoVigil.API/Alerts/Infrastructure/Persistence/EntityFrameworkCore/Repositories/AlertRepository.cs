@@ -17,6 +17,15 @@ public class AlertRepository(AppDbContext context) : BaseRepository<Alert>(conte
             .FirstOrDefaultAsync(a => a.Id == new AlertId(id), cancellationToken);
     }
 
+    public override async Task<Alert?> FindByIdAsNoTrackingAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await Context.Set<Alert>()
+            .AsNoTracking()
+            .Include(a => a.CorrectiveActions)
+            .Include(a => a.Readings)
+            .FirstOrDefaultAsync(a => a.Id == new AlertId(id), cancellationToken);
+    }
+
     public async Task<IEnumerable<Alert>> ListWithDetailsAsync(CancellationToken cancellationToken = default)
     {
         return await Context.Set<Alert>()

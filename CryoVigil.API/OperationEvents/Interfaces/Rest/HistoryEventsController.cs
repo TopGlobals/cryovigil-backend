@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CryoVigil.API.OperationEvents.Interfaces.Rest;
 
 [ApiController]
+[Route("api/v1/history")]
 [Route("api/v1/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [Tags("Available Operation Events endpoints")]

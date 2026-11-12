@@ -124,15 +124,21 @@ public class LaboratoriesController(
         {
             EErrorType.Conflict => StatusCodes.Status409Conflict,
             EErrorType.NotFound => StatusCodes.Status404NotFound,
-            _ => throw new InvalidOperationException($"Unexpected laboratory command error: {error.Code}")
+            EErrorType.Validation => StatusCodes.Status400BadRequest,
+            _ => StatusCodes.Status400BadRequest
+        };
+
+        var title = error.Type switch
+        {
+            EErrorType.Conflict => "Laboratory code already exists",
+            EErrorType.NotFound => "Laboratory not found",
+            _ => "Bad request"
         };
 
         return new ObjectResult(new ProblemDetails
         {
             Status = statusCode,
-            Title = error.Type == EErrorType.Conflict
-                ? "Laboratory code already exists"
-                : "Laboratory not found",
+            Title = title,
             Detail = error.Message,
             Instance = HttpContext.Request.Path
         })

@@ -1,10 +1,10 @@
-using CryoVigil.API.History.Application.CommandServices;
-using CryoVigil.API.History.Domain.Model.Aggregates;
-using CryoVigil.API.History.Domain.Model.Commands;
-using CryoVigil.API.History.Domain.Repositories;
+using CryoVigil.API.OperationEvents.Application.CommandServices;
+using CryoVigil.API.OperationEvents.Domain.Model.Aggregates;
+using CryoVigil.API.OperationEvents.Domain.Model.Commands;
+using CryoVigil.API.OperationEvents.Domain.Repositories;
 using CryoVigil.API.Shared.Domain.Repositories;
 
-namespace CryoVigil.API.History.Application.Internal.CommandServices;
+namespace CryoVigil.API.OperationEvents.Application.Internal.CommandServices;
 
 public class HistoryEventCommandService(
     IHistoryEventRepository historyEventRepository,

@@ -1,6 +1,6 @@
 using CryoVigil.API.Shared.Domain.Model.Aggregates.Internal;
 
-namespace CryoVigil.API.History.Domain.Model.Aggregates;
+namespace CryoVigil.API.OperationEvents.Domain.Model.Aggregates;
 
 public class HistoryEvent : AggregateRoot
 {

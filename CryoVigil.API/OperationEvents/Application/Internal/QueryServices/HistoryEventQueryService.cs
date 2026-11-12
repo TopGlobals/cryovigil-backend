@@ -1,9 +1,9 @@
-using CryoVigil.API.History.Application.QueryServices;
-using CryoVigil.API.History.Domain.Model.Aggregates;
-using CryoVigil.API.History.Domain.Model.Queries;
-using CryoVigil.API.History.Domain.Repositories;
+using CryoVigil.API.OperationEvents.Application.QueryServices;
+using CryoVigil.API.OperationEvents.Domain.Model.Aggregates;
+using CryoVigil.API.OperationEvents.Domain.Model.Queries;
+using CryoVigil.API.OperationEvents.Domain.Repositories;
 
-namespace CryoVigil.API.History.Application.Internal.QueryServices;
+namespace CryoVigil.API.OperationEvents.Application.Internal.QueryServices;
 
 public class HistoryEventQueryService(IHistoryEventRepository historyEventRepository) : IHistoryEventQueryService
 {

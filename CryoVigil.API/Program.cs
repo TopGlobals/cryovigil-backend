@@ -86,7 +86,7 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddSingleton<IStringLocalizer<ErrorMessages>, StringLocalizer<ErrorMessages>>();
 builder.Services.AddSingleton<IStringLocalizer<CommonMessages>, StringLocalizer<CommonMessages>>();
 
-builder.Services.AddSingleton<ProblemDetailsFactory>();
+builder.Services.AddScoped<ProblemDetailsFactory>();
 
 builder.Services.AddOpenApi();
 

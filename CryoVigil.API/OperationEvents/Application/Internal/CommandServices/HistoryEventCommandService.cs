@@ -26,9 +26,24 @@ public class HistoryEventCommandService(
             command.Timestamp
         );
 
-        await historyEventRepository.AddAsync(historyEvent, cancellationToken);
-        await unitOfWork.CompleteAsync(cancellationToken);
+        await historyEventRepository.AddAsync(historyEvent);
+        await unitOfWork.CompleteAsync();
 
         return historyEvent;
+    }
+
+    public async Task<bool> Handle(
+        DeleteHistoryEventCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var historyEvent = await historyEventRepository.FindByIdAsync(command.Id);
+
+        if (historyEvent == null)
+            return false;
+
+        historyEventRepository.Remove(historyEvent);
+        await unitOfWork.CompleteAsync();
+
+        return true;
     }
 }

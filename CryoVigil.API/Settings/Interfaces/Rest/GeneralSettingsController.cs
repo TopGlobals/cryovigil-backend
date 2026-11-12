@@ -32,10 +32,19 @@ public class GeneralSettingsController(
         UpdateGeneralSettingsResource resource,
         CancellationToken cancellationToken)
     {
+        if (!Enum.TryParse<TemperatureUnit>(resource.TemperatureUnit, ignoreCase: true, out var unit))
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Invalid temperature unit",
+                Detail = $"'{resource.TemperatureUnit}' is not a valid TemperatureUnit. Valid values are Celsius or Fahrenheit.",
+                Instance = HttpContext.Request.Path
+            });
+        }
+
         var settings = await generalSettingsCommandService.Handle(
-            new UpdateGeneralSettingsCommand(
-                resource.Region,
-                Enum.Parse<TemperatureUnit>(resource.TemperatureUnit)),
+            new UpdateGeneralSettingsCommand(resource.Region, unit),
             cancellationToken);
 
         return Ok(new GeneralSettingsResource(settings.Region, settings.TemperatureUnit));

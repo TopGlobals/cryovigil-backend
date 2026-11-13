@@ -155,8 +155,31 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
 	var services = scope.ServiceProvider;
+	var logger = services.GetRequiredService<ILogger<Program>>();
 	var context = services.GetRequiredService<AppDbContext>();
-	context.Database.Migrate();
+
+	const int maxRetries = 5;
+	const int delaySeconds = 5;
+	for (var attempt = 1; attempt <= maxRetries; attempt++)
+	{
+		try
+		{
+			logger.LogInformation("Attempting database migration (attempt {Attempt}/{MaxRetries})...", attempt, maxRetries);
+			context.Database.Migrate();
+			logger.LogInformation("Database migration applied successfully.");
+			break;
+		}
+		catch (Exception ex) when (attempt < maxRetries)
+		{
+			logger.LogWarning(ex, "Database connection not ready on attempt {Attempt}/{MaxRetries}. Retrying in {Delay} seconds...", attempt, maxRetries, delaySeconds);
+			Thread.Sleep(TimeSpan.FromSeconds(delaySeconds));
+		}
+		catch (Exception ex)
+		{
+			logger.LogCritical(ex, "Database migration failed after {MaxRetries} attempts.", maxRetries);
+			throw;
+		}
+	}
 }
 
 app.UseExceptionHandler();

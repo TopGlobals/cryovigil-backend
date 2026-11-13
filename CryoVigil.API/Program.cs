@@ -6,6 +6,20 @@ using CryoVigil.API.Alerts.Application.Internal.QueryServices;
 using CryoVigil.API.Alerts.Application.QueryServices;
 using CryoVigil.API.Alerts.Domain.Repositories;
 using CryoVigil.API.Alerts.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using CryoVigil.API.Iam.Application.Acl;
+using CryoVigil.API.Iam.Application.CommandServices;
+using CryoVigil.API.Iam.Application.Internal.CommandServices;
+using CryoVigil.API.Iam.Application.Internal.OutboundServices;
+using CryoVigil.API.Iam.Application.Internal.QueryServices;
+using CryoVigil.API.Iam.Application.QueryServices;
+using CryoVigil.API.Iam.Domain.Repositories;
+using CryoVigil.API.Iam.Infrastructure.Hashing.BCrypt.Services;
+using CryoVigil.API.Iam.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
+using CryoVigil.API.Iam.Infrastructure.Pipeline.Middleware.Extensions;
+using CryoVigil.API.Iam.Infrastructure.Tokens.Jwt.Configuration;
+using CryoVigil.API.Iam.Infrastructure.Tokens.Jwt.Services;
+using CryoVigil.API.Iam.Interfaces.Acl;
+using CryoVigil.API.Iam.Resources;
 using CryoVigil.API.OperationEvents.Application.CommandServices;
 using CryoVigil.API.OperationEvents.Application.Internal.CommandServices;
 using CryoVigil.API.OperationEvents.Application.Internal.QueryServices;
@@ -32,6 +46,7 @@ using CryoVigil.API.Profiles.Domain.Repositories;
 using CryoVigil.API.Profiles.Infrastructure.Persistence.EntityFrameworkCore.Repositories;
 using CryoVigil.API.Shared.Domain.Repositories;
 using CryoVigil.API.Shared.Infrastructure.Interfaces.AspNetCore.Configuration;
+using CryoVigil.API.Shared.Infrastructure.Interfaces.AspNetCore.OpenApi;
 using CryoVigil.API.Shared.Infrastructure.Mediator.Cortex.Configuration;
 using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Configuration;
 using CryoVigil.API.Shared.Infrastructure.Persistence.EntityFrameworkCore.Interceptors;
@@ -85,10 +100,15 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 
 builder.Services.AddSingleton<IStringLocalizer<ErrorMessages>, StringLocalizer<ErrorMessages>>();
 builder.Services.AddSingleton<IStringLocalizer<CommonMessages>, StringLocalizer<CommonMessages>>();
+builder.Services.AddSingleton<IStringLocalizer<IamMessages>, StringLocalizer<IamMessages>>();
 
 builder.Services.AddScoped<ProblemDetailsFactory>();
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+    options.AddOperationTransformer<IamBearerSecurityOperationTransformer>();
+});
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<DispatchDomainEventsInterceptor>();
@@ -113,6 +133,15 @@ builder.Services.AddScoped<IAlertsCommandService, AlertsCommandService>();
 builder.Services.AddScoped<IHistoryEventRepository, HistoryEventRepository>();
 builder.Services.AddScoped<IHistoryEventQueryService, HistoryEventQueryService>();
 builder.Services.AddScoped<IHistoryEventCommandService, HistoryEventCommandService>();
+
+// IAM Bounded Context
+builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserCommandService, UserCommandService>();
+builder.Services.AddScoped<IUserQueryService, UserQueryService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IHashingService, HashingService>();
+builder.Services.AddScoped<IIamContextFacade, IamContextFacade>();
 
 // Mediator pipeline behaviors
 builder.Services.AddScoped(typeof(ICommandPipelineBehavior<>), typeof(LoggingCommandBehavior<>));
@@ -147,6 +176,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAllPolicy");
+
+app.UseRequestAuthorization();
 
 app.UseHttpsRedirection();
 
